@@ -44,19 +44,24 @@ public class OrcidService  {
 	
 	private static LoadingCache<String,String> cache = CacheBuilder.newBuilder()
 		    .maximumSize(100)
-		    .expireAfterWrite(1, TimeUnit.MINUTES)
+		    .expireAfterWrite(100, TimeUnit.MINUTES)
 		    .build(new CacheLoader<String, String>() {
 		        @Override
-		        public String load(String componentName){
-		        	String url = "https://api.github.com/repos/aeris-data/"+componentName+"/tags?fakeparam="+UUID.randomUUID();
-		        	String content="";
+		        public String load(String orcid){
 		        	try {
-		        		content = IOUtils.toString(new URL(url),Charset.defaultCharset());
+		        	OrcidPublicClient client = new OrcidPublicClient();
+		    		OrcidProfile bio = client.getOrcidBio(orcid);
+		    		if ((bio != null) && (bio.getOrcidBio() != null)) {
+		    			String result = bio.getOrcidBio().getPersonalDetails().getGivenNames()+" "+bio.getOrcidBio().getPersonalDetails().getFamilyName();
+		    			return result;	
+		    		}
+		    		else {
+		    			return "";
+		    		}
 		        	}
 		        	catch (Exception e) {
-		        		log.warn("Impossible de trouver les versions du composants: "+componentName +" url : "+url + " Exception "+ExceptionUtils.getFullStackTrace(e));
+		        		return "";
 		        	}
-		        	return content;
 		        }
 		    });
 
@@ -76,17 +81,10 @@ public class OrcidService  {
 	@ApiOperation(value = "Compute name from Orcid")
 	public Response nameFromOrcid(@PathParam("orcid") String orcid) {
 		try {
-		OrcidPublicClient client = new OrcidPublicClient();
-		OrcidProfile bio = client.getOrcidBio(orcid);
-		if ((bio != null) && (bio.getOrcidBio() != null)) {
-			String result = bio.getOrcidBio().getPersonalDetails().getGivenNames()+" "+bio.getOrcidBio().getPersonalDetails().getFamilyName();
-			return Response.status(Response.Status.OK).entity(StringUtils.trimToEmpty(result)).build();	
+			return Response.status(Response.Status.OK).entity(StringUtils.trimToEmpty(cache.get(orcid))).build();
 		}
-		else {
-			return Response.status(Response.Status.NOT_FOUND).entity("Not found").build();
-		}
-		} catch (Exception e) {
-			throw new WebApplicationException("Impossible to connect to github"); 
+		catch (Exception e) {
+			return Response.status(Response.Status.OK).entity("").build();
 		}
 	}
 	
