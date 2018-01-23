@@ -68,7 +68,7 @@ public class PrintUtils {
 			writeHeader(document);
 			writeProjectDescriptionPart(callForProject, document);
 			writeApplicantDescription(callForProject, document);
-			writeSubmissionDate(callForProject, document);
+			//writeSubmissionDate(callForProject, document);
 			// document.newPage();
 			return result;
 		} catch (Exception e) {
@@ -121,19 +121,19 @@ public class PrintUtils {
 
 	private void writeHeader(Document document) throws Exception {
 		PdfPTable oneCellTable = getHeaderTable();
-		String logoUrl = "http://www.aeris-data.fr/images/logo.png";
-		Image logo = Image.getInstance(logoUrl);
-		logo.scaleAbsolute(171, 90);
-		PdfPCell logoCell = new PdfPCell(logo, false);
-		logoCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-		logoCell.setVerticalAlignment(Element.ALIGN_TOP);
-		logoCell.setBackgroundColor(backgroundColor);
-		logoCell.setBorder(0);
-		logoCell.setBorderWidthBottom(2);
-		logoCell.setBorderColorBottom(BaseColor.WHITE);
-		logoCell.setPaddingBottom(7);
-		logoCell.setPaddingTop(7);
-		oneCellTable.addCell(logoCell);
+//		String logoUrl = "https://commons.wikimedia.org/wiki/File:Logo_TV_2015.png";
+//		Image logo = Image.getInstance(logoUrl);
+//		logo.scaleAbsolute(171, 90);
+//		PdfPCell logoCell = new PdfPCell(logo, false);
+//		logoCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+//		logoCell.setVerticalAlignment(Element.ALIGN_TOP);
+//		logoCell.setBackgroundColor(backgroundColor);
+//		logoCell.setBorder(0);
+//		logoCell.setBorderWidthBottom(2);
+//		logoCell.setBorderColorBottom(BaseColor.WHITE);
+//		logoCell.setPaddingBottom(7);
+//		logoCell.setPaddingTop(7);
+//		oneCellTable.addCell(logoCell);
 
 		PdfPCell titleCell = new PdfPCell(new Phrase("Appel à projet", h1Font));
 		titleCell.setBackgroundColor(backgroundColor);

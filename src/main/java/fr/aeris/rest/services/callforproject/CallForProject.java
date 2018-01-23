@@ -45,6 +45,14 @@ public class CallForProject  {
 
 	private String directorName;
 
+	private String applicantEmail;
+
+	private String applicantName;
+
+	private String applicantLaboratory;
+
+	private List<Responsible> responsibles;
+
 	public String getDirectorEmail() {
 		return directorEmail;
 	}
@@ -84,14 +92,6 @@ public class CallForProject  {
 	public void setApplicantLaboratory(String applicantLaboratory) {
 		this.applicantLaboratory = applicantLaboratory;
 	}
-
-	private String applicantEmail;
-
-	private String applicantName;
-
-	private String applicantLaboratory;
-
-	private List<Responsible> responsibles;
 
 	public Date getSubmissionDate() {
 		return submissionDate;
@@ -188,14 +188,6 @@ public class CallForProject  {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public String getFormattedProjectName() {
-		String result = StringUtil.trimToEmpty(getName()).replaceAll(" +", " ");
-		result = result.replace(' ', '_');
-		result = result.replace('\'', '_');
-		result = result.toUpperCase().trim();
-		return result;
 	}
 
 	public String getDueDate() {
