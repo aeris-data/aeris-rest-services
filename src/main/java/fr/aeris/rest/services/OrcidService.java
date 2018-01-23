@@ -1,10 +1,7 @@
 package fr.aeris.rest.services;
 
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.GET;
@@ -16,9 +13,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,17 +44,10 @@ public class OrcidService  {
 		        @Override
 		        public String load(String orcid){
 		        	try {
-		        	OrcidPublicClient client = new OrcidPublicClient();
-		    		OrcidProfile bio = client.getOrcidBio(orcid);
-		    		if ((bio != null) && (bio.getOrcidBio() != null)) {
-		    			String result = bio.getOrcidBio().getPersonalDetails().getGivenNames()+" "+bio.getOrcidBio().getPersonalDetails().getFamilyName();
-		    			return result;	
-		    		}
-		    		else {
-		    			return "";
-		    		}
+		        		return getNameFromOrcid(orcid);
 		        	}
 		        	catch (Exception e) {
+		        		e.printStackTrace();
 		        		return "";
 		        	}
 		        }
@@ -75,46 +63,41 @@ public class OrcidService  {
 		return Response.status(Response.Status.OK).entity(answer).build();
 	}
 	
+	
+	private static String getNameFromOrcid(String orcid) {
+	try {
+	OrcidPublicClient client = new OrcidPublicClient();
+	OrcidProfile bio = client.getOrcidBio(orcid);
+	if ((bio != null) && (bio.getOrcidBio() != null)) {
+		String result = bio.getOrcidBio().getPersonalDetails().getGivenNames()+" "+bio.getOrcidBio().getPersonalDetails().getFamilyName();
+		return result;	
+	}
+	else {
+		return "";
+		}
+	
+	}
+	catch (Exception e) {
+		return "";
+	}
+	}
+	
+		    
+	
 	@GET
 	@Path("/name/{orcid}")
 	@Produces(MediaType.TEXT_PLAIN)
 	@ApiOperation(value = "Compute name from Orcid")
 	public Response nameFromOrcid(@PathParam("orcid") String orcid) {
 		try {
-			return Response.status(Response.Status.OK).entity(StringUtils.trimToEmpty(cache.get(orcid))).build();
+			//return Response.status(Response.Status.OK).entity(StringUtils.trimToEmpty(cache.get(orcid))).build();
+			return Response.status(Response.Status.OK).entity(StringUtils.trimToEmpty(getNameFromOrcid(orcid))).build();
 		}
 		catch (Exception e) {
 			return Response.status(Response.Status.OK).entity("").build();
 		}
 	}
 	
-	@GET
-	@Path("/versions")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response versions(@ApiParam(name = "component", value = "The name of the component ", required = true) @QueryParam("component") String component) {
-		
-		try {
-			String aux = cache.get(component);
-			String result ="";
-			if (StringUtils.isEmpty(aux)) {
-				result = lastKnownValues.get(component);
-			}
-			else {
-				lastKnownValues.put(component, aux);
-				result = aux;
-			}
-			
-			if (!StringUtils.isEmpty(result)) {
-				return Response.status(Response.Status.OK).entity(result).build();
-			} 
-			else {
-				return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("Impossible to compute latest available version for "+component).build();
-			}
-		} catch (Exception e) {
-			throw new WebApplicationException("Impossible to connect to github");			
-		}
-		
-	}
 	
 	
 

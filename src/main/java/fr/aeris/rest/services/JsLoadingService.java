@@ -41,7 +41,7 @@ public class JsLoadingService  {
 	
 	private static LoadingCache<String,String> cache = CacheBuilder.newBuilder()
 		    .maximumSize(100)
-		    .expireAfterWrite(1, TimeUnit.MINUTES)
+		    .expireAfterWrite(3, TimeUnit.MINUTES)
 		    .build(new CacheLoader<String, String>() {
 		        @Override
 		        public String load(String componentName){
@@ -52,6 +52,8 @@ public class JsLoadingService  {
 		        	}
 		        	catch (Exception e) {
 		        		log.warn("Impossible de trouver les versions du composants: "+componentName +" url : "+url + " Exception "+ExceptionUtils.getFullStackTrace(e));
+		        		log.debug(ExceptionUtils.getFullStackTrace(e));
+		        		e.printStackTrace();
 		        	}
 		        	return content;
 		        }
@@ -90,7 +92,9 @@ public class JsLoadingService  {
 				return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("Impossible to compute latest available version for "+component).build();
 			}
 		} catch (Exception e) {
-			throw new WebApplicationException("Impossible to connect to github");			
+			log.debug(ExceptionUtils.getFullStackTrace(e));
+			e.printStackTrace();
+			throw new WebApplicationException("Impossible to connect to github");		
 		}
 		
 	}

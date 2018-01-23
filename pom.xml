@@ -15,21 +15,75 @@
 
 	<properties>
 		<env>DEV</env>
+		<org.hibernate.version>3.5.1-Final</org.hibernate.version>
+		<final.name.suffix></final.name.suffix>
 	</properties>
 
 	<dependencies>
-
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.9</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>fr.sedoo.commons</groupId>
+			<artifactId>commons-backoffice</artifactId>
+			<version>0.0.4-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+			<version>4.2.0</version>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-test -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>4.2.5.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>8.4-701.jdbc3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>4.2.5.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>4.2.6.RELEASE</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet</artifactId>
 			<version>2.13</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.test-framework</groupId>
+			<artifactId>jersey-test-framework-core</artifactId>
+			<version>2.13</version>
+		</dependency>
+
+<dependency>
+			<groupId>org.glassfish.jersey.test-framework.providers</groupId>
+			<artifactId>jersey-test-framework-provider-inmemory</artifactId>
+			<version>2.13</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -85,19 +139,18 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.restlet.jee/org.restlet.ext.net -->
-<dependency>
-    <groupId>org.restlet.jee</groupId>
-    <artifactId>org.restlet.ext.net</artifactId>
-    <version>2.2-M6</version>
-</dependency>
+		<dependency>
+			<groupId>org.restlet.jee</groupId>
+			<artifactId>org.restlet.ext.net</artifactId>
+			<version>2.2-M6</version>
+		</dependency>
 
 
 
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.4</version>
-			<scope>test</scope>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.11.0</version>
 		</dependency>
 
 		<dependency>
@@ -132,10 +185,46 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-annotations</artifactId>
+			<version>${org.hibernate.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${org.hibernate.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${org.hibernate.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.0.2.GA</version>
+			<exclusions>
+			<exclusion>
+				<groupId>javax.xml.bind</groupId>
+				<artifactId>jaxb-api</artifactId>
+			</exclusion>
+			<exclusion>
+				<groupId>com.sun.xml.bind</groupId>
+				<artifactId>jaxb-impl</artifactId>
+			</exclusion>
+			
+			</exclusions>
+		</dependency>
+
 	</dependencies>
 
 	<build>
-		<finalName>${project.artifactId}</finalName>
+		<finalName>${project.artifactId}${final.name.suffix}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -196,11 +285,22 @@
 
 	<repositories>
 	
+	<repository>
+			<id>sourcesup-releases</id>
+			<url>http://sourcesup.renater.fr/nexus/content/repositories/reposedoo-releases/</url>
+		</repository>
+
+		<repository>
+			<id>sourcesup-snapshots</id>
+			<url>http://sourcesup.renater.fr/nexus/content/repositories/reposedoo-snapshots/</url>
+		</repository>
+	
+
 		<repository>
 			<id>restlet</id>
 			<url>http://maven.restlet.org/</url>
 		</repository>
-		
+
 		<repository>
 			<id>orcid-java-client-mvn-repo</id>
 			<url>https://raw.github.com/TomDemeranville/orcid-java-client/mvn-repo/</url>
